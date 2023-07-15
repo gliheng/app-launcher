@@ -5,7 +5,11 @@ export default defineNuxtConfig({
   ],
   devtools: { enabled: true },
   modules: [
-    '@nuxthq/ui',
-    '@nuxtjs/tailwindcss',
+    'nuxt-quasar-ui',
   ],
+  quasar: {
+    plugins: [
+      'Dialog',
+    ],
+  },
 })

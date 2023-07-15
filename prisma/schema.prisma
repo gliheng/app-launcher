@@ -11,11 +11,30 @@ datasource db {
 }
 
 model Project {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  name      String   @db.VarChar(255) @unique
-  git       String   @db.VarChar(4096)
-  wfType    String   @db.VarChar(255)
-  wfArgs    Json     @db.Json
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  name         String     @unique @db.VarChar(255)
+  git          String     @db.VarChar(4096)
+  template     String     @db.VarChar(255)
+  workflow     String     @db.VarChar(255)
+  workflowArgs Json       @db.Json
+  builds       Deployment[]
+}
+
+model Deployment {
+  id           Int        @id @default(autoincrement())
+  key          String     @db.VarChar(255)
+  createdAt    DateTime   @default(now())
+  project      Project    @relation(fields: [projectId], references: [id])
+  projectId    Int
+  logs         Log[]
+}
+
+model Log {
+  id           Int        @id @default(autoincrement())
+  createdAt    DateTime   @default(now())
+  log          String     @db.Text
+  deployment   Deployment @relation(fields: [deploymentId], references: [id])
+  deploymentId Int
 }

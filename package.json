@@ -10,14 +10,17 @@
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
-    "@nuxthq/ui": "^2.5.0",
-    "@nuxtjs/tailwindcss": "^6.8.0",
     "@types/node": "^18",
     "nuxt": "^3.6.0",
+    "nuxt-quasar-ui": "^2.0.4",
     "prisma": "^4.16.2",
+    "sass": "^1.63.6",
     "typescript": "latest"
   },
   "dependencies": {
-    "@prisma/client": "^4.16.2"
+    "@prisma/client": "^4.16.2",
+    "@quasar/extras": "^1.16.5",
+    "nanoid": "^4.0.2",
+    "quasar": "^2.12.2"
   }
 }
