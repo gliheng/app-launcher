@@ -28,6 +28,7 @@ const importTypes = [{
   value: 'node',
 }];
 
+const projectStore = useProjectStore();
 const tab = ref('create');
 
 async function create() {
@@ -42,23 +43,24 @@ async function create() {
   if (tab.value == 'create') {
     const type = templateType.value;
     const subType = templateSubType.value;
-    let tmpl;
+    let tmpl: string;
     if (subType) {
       tmpl = `${type}-${subType}`;
     } else {
       tmpl = type;
     }
     body.template = tmpl;
-    const tmplObj = templates[tmpl];
+    if (!(tmpl in templates)) {
+      // error
+    }
+    const tmplObj = templates[tmpl as keyof typeof templates];
     body.workflow = tmplObj.workflow;
     body.workflowArgs = tmplObj.workflowArgs;
   } else if (tab.value == 'import') {
     body.template = `git: ${git.value}`;
   }
-  const { data } = await useFetch('/api/project/new', {
-    method: 'POST',
-    body: body,
-  })
+
+  await projectStore.create(body);
 
   navigateTo(`/project/${name.value}`);
 }

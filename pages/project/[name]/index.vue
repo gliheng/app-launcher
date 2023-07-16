@@ -1,17 +1,11 @@
 <script lang="ts" setup>
 import { nanoid } from 'nanoid';
-
-definePageMeta({
-  layout: false,
-});
+import { matList, matChecklist } from '@quasar/extras/material-icons';
 
 const route = useRoute();
-const { data: list } = await useProjectList();
-const { data: project } = await useFetch('/api/project/get', {
-  query: {
-    name: route.params.name,
-  },
-});
+const projectStore = useProjectStore();
+const project = projectStore.find(route.params.name);
+
 const { data: deploymentList } = await useFetch('/api/deployment/list', {
   query: {
     name: route.params.name,
@@ -19,136 +13,68 @@ const { data: deploymentList } = await useFetch('/api/deployment/list', {
 });
 
 async function deploy() {
-  const { data } = await useFetch('/api/deployment/new', {
+  const data = await $fetch('/api/deployment/new', {
     method: 'POST',
     body: {
       key: nanoid(),
-      projectId: project.value.id,
+      projectId: project.id,
     },
-  })
+  });
+  deploymentList.value.unshift(data);
 }
 
 const columns = [
   {
-    name: 'name',
-    required: true,
-    label: 'Dessert (100g serving)',
+    name: 'createdAt',
+    label: 'Deploy Time',
+    field: 'createdAt',
     align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
-    sortable: true
-  },
-  { name: 'key', label: 'Deployment Key', field: 'key' },
-]
-
-const rows = [
-  {
-    name: 'Frozen Yogurt',
-    calories: 159,
-    fat: 6.0,
-    carbs: 24,
-    protein: 4.0,
-    sodium: 87,
-    calcium: '14%',
-    iron: '1%'
   },
   {
-    name: 'Ice cream sandwich',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: 4.3,
-    sodium: 129,
-    calcium: '8%',
-    iron: '1%'
+    name: 'key',
+    label: 'Deploy Key',
+    field: 'key'
   },
   {
-    name: 'Eclair',
-    calories: 262,
-    fat: 16.0,
-    carbs: 23,
-    protein: 6.0,
-    sodium: 337,
-    calcium: '6%',
-    iron: '7%'
-  },
-  {
-    name: 'Cupcake',
-    calories: 305,
-    fat: 3.7,
-    carbs: 67,
-    protein: 4.3,
-    sodium: 413,
-    calcium: '3%',
-    iron: '8%'
-  },
-  {
-    name: 'Gingerbread',
-    calories: 356,
-    fat: 16.0,
-    carbs: 49,
-    protein: 3.9,
-    sodium: 327,
-    calcium: '7%',
-    iron: '16%'
-  },
-  {
-    name: 'Jelly bean',
-    calories: 375,
-    fat: 0.0,
-    carbs: 94,
-    protein: 0.0,
-    sodium: 50,
-    calcium: '0%',
-    iron: '0%'
-  },
-  {
-    name: 'Lollipop',
-    calories: 392,
-    fat: 0.2,
-    carbs: 98,
-    protein: 0,
-    sodium: 38,
-    calcium: '0%',
-    iron: '2%'
+    name: 'detail',
+    label: 'Detail',
   },
 ];
+
+const pagination = {
+  rowsPerPage: 20,
+};
+
 </script>
 
 <template>
-  <NuxtLayout name="default">
-    <template #menu>
-      <q-btn-dropdown :label="project.name">
-        <q-list>
-          <NuxtLink v-for="item of list" :to="'/project/' + item.name">
-            <q-item clickable v-close-popup>
-              <q-item-section>
-                <q-item-label>{{ item.name }}</q-item-label>
-              </q-item-section>
-            </q-item>
-          </NuxtLink>
-        </q-list>
-      </q-btn-dropdown>
-    </template>
-    <div class="q-pa-md">
-      <div class="flex items-center">
-        <div class="info">
-          <p>{{ project.name }}</p>
-          <p>Git: {{ project.git }}</p>
-        </div>
-        <q-space />
-        <q-btn icon="send" label="Deploy" @click="deploy" />
+  <div class="q-pa-md">
+    <q-toolbar>
+      <div class="info">
+        <p>{{ project.name }}</p>
+        <p>Git: {{ project.git }}</p>
       </div>
-      <q-table
-        flat bordered
-        title="Deployments"
-        :rows="rows"
-        :columns="columns"
-        row-key="name"
-        color="amber"
-      />
-    </div>
-  </NuxtLayout>
+      <q-space />
+      <q-btn icon="send" label="Deploy" @click="deploy" />
+    </q-toolbar>
+    <q-table
+      flat bordered
+      title="Deployments"
+      :rows="deploymentList"
+      :columns="columns"
+      row-key="name"
+      color="amber"
+      :pagination="pagination"
+    >
+      <template v-slot:body-cell-detail="props">
+        <q-td key="detail" :props="props">
+          <NuxtLink :to="'/project/' + project.name + '/' + props.row.key">
+            <q-icon :name="matList" />
+          </NuxtLink>
+        </q-td>
+      </template>
+    </q-table>
+  </div>
 </template>
 
 <style lang="scss" scoped>

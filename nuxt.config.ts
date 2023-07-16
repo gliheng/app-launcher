@@ -6,10 +6,17 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     'nuxt-quasar-ui',
+    '@pinia/nuxt',
   ],
   quasar: {
     plugins: [
       'Dialog',
+    ],
+  },
+  pinia: {
+    autoImports: [
+      'defineStore',
+      'storeToRefs',
     ],
   },
 })

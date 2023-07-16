@@ -4,7 +4,7 @@ const route = useRoute();
 
 <template>
   <div class="q-pa-md">
-    <h5>Deployment {{ route.params.buildKey }}</h5>
+    <h5>Deployment {{ route.params.key }}</h5>
     <div class="q-pa-md">
       <q-list bordered>
         <q-expansion-item

@@ -1,13 +1,12 @@
 import { prisma } from '../../db';
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event);
-  console.log(
-    'body?', body
-  );
+  const query = getQuery(event);
   return await prisma.deployment.findMany({
     where: {
-      projectId: body.projectId,
+      project: {
+        name: String(query.name),
+      },
     },
   });
 });

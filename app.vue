@@ -1,8 +1,10 @@
+<script setup>
+const projectStore = useProjectStore();
+await projectStore.fetch();
+</script>
+
 <template>
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
 </template>
-
-<style src="~/assets/css/global.css" />
-<style src="~/assets/css/tailwind.css" />

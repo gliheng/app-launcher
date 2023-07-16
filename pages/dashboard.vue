@@ -6,7 +6,7 @@
       <q-btn @click="showCreate">Create</q-btn>
     </q-toolbar>
     <div class="project-list">
-      <NuxtLink v-for="item of data" :to="'/project/' + item.name">
+      <NuxtLink v-for="item of projectList" :to="'/project/' + item.name">
         <q-btn color="primary">
           {{ item.name }}
         </q-btn>
@@ -19,7 +19,8 @@
 import CreateProject from '~/components/CreateProject.vue';
 import { useQuasar } from 'quasar'
 
-const { data, refresh } = await useProjectList();
+const projectStore = useProjectStore();
+const { list: projectList } = storeToRefs(projectStore);
 const $q = useQuasar()
 
 function showCreate() {
@@ -27,7 +28,6 @@ function showCreate() {
     component: CreateProject,
     componentProps: {},
   }).onOk(() => {
-    refresh();
     console.log('OK')
   }).onCancel(() => {
     console.log('Cancel')
