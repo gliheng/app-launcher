@@ -1,0 +1,9 @@
+project:
+  name: nestjs
+  template:
+    cmds:
+      - nest new {name} -p npm --skip-install
+      - mv {name} source
+  git: git://
+  workflow: nodejs
+  workflow_args: {}

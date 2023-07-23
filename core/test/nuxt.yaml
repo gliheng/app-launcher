@@ -1,0 +1,10 @@
+project:
+  name: nuxt
+  template:
+    cmds:
+      - degit git@github.com:nuxt/starter.git#v3 source
+  git: git://
+  workflow: nodejs
+  workflow_args:
+    # TODO: This PR is required to use BP_NPM_START_SCRIPT: https://github.com/paketo-buildpacks/npm-start/issues/292
+    - startScript: preview

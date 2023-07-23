@@ -1,0 +1,8 @@
+project:
+  name: vue
+  template:
+    cmds:
+      - degit git@github.com:vitejs/vite.git/packages/create-vite/template-vue#main source
+  git: git://
+  workflow: static
+  workflow_args: {}

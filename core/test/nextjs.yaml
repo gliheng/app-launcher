@@ -1,0 +1,9 @@
+project:
+  name: nextjs
+  template:
+    cmds:
+      - npx create-next-app@latest {name} --ts --use-npm --eslint no --tailwind yes --src-dir no --app yes --import-alias yes
+      - mv {name} source
+  git: git://
+  workflow: nodejs
+  workflow_args: {}
